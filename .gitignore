@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+reports/*.csv
+reports/*.md
+!reports/.gitkeep
+.cache/
+*.sqlite
+*.sqlite3
+run_logs/
+*.log
+data/raw/_uploaded.csv

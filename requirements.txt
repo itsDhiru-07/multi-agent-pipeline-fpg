@@ -1,0 +1,16 @@
+# langgraph-checkpoint 3.x/4.x requires a langchain-core release with the
+# newer Reviver API; pinned to versions that work together with
+# langchain-core 0.3.x. If you bump langchain-core past 1.0, re-check
+# compatibility before bumping these.
+langgraph>=0.2.0
+langgraph-checkpoint==2.1.2
+langgraph-checkpoint-sqlite==2.0.11
+langchain-core>=0.3.0,<1.0.0
+pandas>=2.0.0
+numpy>=1.26.0
+pydantic>=2.6.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+anthropic>=0.34.0
+openai>=1.40.0
+streamlit>=1.38.0

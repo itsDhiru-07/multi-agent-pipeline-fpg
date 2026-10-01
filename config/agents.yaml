@@ -1,0 +1,76 @@
+# Per-agent LLM provider/model configuration.
+#
+# Every provider except "anthropic" is called through the OpenAI-compatible
+# chat completions API (base_url + api_key), so adding a new OpenAI-compatible
+# endpoint (Together.ai, Groq, a local vLLM server, etc.) is just a new entry
+# under `providers` - no code changes required.
+#
+# Each agent entry picks a provider + model. Agents with use_llm: false run
+# as pure deterministic/rule-based Python and ignore the model field entirely.
+
+providers:
+  anthropic:
+    kind: anthropic
+    base_url: https://api.anthropic.com
+    api_key_env: ANTHROPIC_API_KEY
+
+  openai:
+    kind: openai_compatible
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+
+  nvidia_nim:
+    kind: openai_compatible
+    base_url: https://integrate.api.nvidia.com/v1
+    api_key_env: NVIDIA_API_KEY
+
+  local:
+    kind: openai_compatible
+    base_url: http://localhost:11434/v1
+    api_key_env: OLLAMA_API_KEY
+
+agents:
+  # Deterministic ETL stages - no LLM call, config kept here for consistency
+  # and so they can be upgraded to LLM-assisted later without restructuring.
+  ingestion:
+    use_llm: false
+    tier: none
+
+  data_quality:
+    use_llm: false
+    tier: none
+
+  kpi:
+    use_llm: false
+    tier: none
+
+  # Reasoning-heavy agents - these are where LLM judgment actually adds value.
+  insight:
+    use_llm: true
+    tier: heavy
+    provider: anthropic
+    model: claude-sonnet-5
+    temperature: 0.3
+    max_tokens: 2000
+
+  narrative:
+    use_llm: true
+    tier: heavy
+    provider: anthropic
+    model: claude-sonnet-5
+    temperature: 0.4
+    max_tokens: 2500
+
+# ---------------------------------------------------------------------------
+# Example: swap the insight agent to a cheap/local model to cut cost, or to
+# NVIDIA NIM for a hosted open-weight model. Uncomment and edit as needed:
+#
+# agents:
+#   insight:
+#     use_llm: true
+#     tier: light
+#     provider: nvidia_nim
+#     model: meta/llama-3.1-8b-instruct
+#     temperature: 0.3
+#     max_tokens: 2000
+# ---------------------------------------------------------------------------
